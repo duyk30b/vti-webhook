@@ -1,0 +1,6 @@
+# Compiled
+/dist
+/node_modules
+
+# Environment
+.env
