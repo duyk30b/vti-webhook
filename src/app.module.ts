@@ -4,7 +4,7 @@ import { ConsulModule } from '@nestcloud/consul'
 import { ServiceModule } from '@nestcloud/service'
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { I18nJsonLoader, I18nModule, QueryResolver } from 'nestjs-i18n'
+import { HeaderResolver, I18nJsonLoader, I18nModule, QueryResolver } from 'nestjs-i18n'
 import * as path from 'path'
 import { resolve } from 'path'
 import { AppController } from './app.controller'
@@ -16,6 +16,7 @@ import { SqlModule } from './database/sql.module'
 import { AxiosModule } from './modules/axios/axios.module'
 import { KongGatewayModule } from './modules/kong-gateway/kong-gateway.module'
 import { NatsClientModule } from './modules/nats/nats-client.module'
+
 @Module({
 	imports: [
 		ConfigModule.forRoot({
@@ -29,7 +30,10 @@ import { NatsClientModule } from './modules/nats/nats-client.module'
 				path: path.join(__dirname, '/i18n/'),
 				watch: true,
 			},
-			resolvers: [{ use: QueryResolver, options: ['lang', 'locale', 'l'] }],
+			resolvers: [
+				{ use: QueryResolver, options: ['lang', 'locale', 'l'] },
+				new HeaderResolver(['lang', 'x-lang']),
+			],
 			typesOutputPath: path.join(__dirname, '../src/generated/i18n.generated.ts'),
 		}),
 		BootModule.forRoot({ filePath: resolve(__dirname, '../config.yaml') }),
@@ -43,7 +47,6 @@ import { NatsClientModule } from './modules/nats/nats-client.module'
 		NatsServerModule,
 		KafkaServerModule,
 	],
-
 	controllers: [AppController],
 	providers: [AppService],
 })

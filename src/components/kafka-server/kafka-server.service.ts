@@ -46,6 +46,7 @@ export class KafkaServerService {
 			history.request = {
 				url: hooks[index].url,
 				headers: hooks[index].header,
+				body: data,
 			}
 
 			if (item.status === 'fulfilled') {

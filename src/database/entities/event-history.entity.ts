@@ -23,7 +23,7 @@ export class EventHistoryEntity {
 
     @Column({ name: 'request', type: 'simple-json', default: {} })
     @Expose()
-    request: Record<string, any>
+    request: { url?: string, headers?: any, body?: any }
 
     @Column({ name: 'response', type: 'simple-json', default: {} })
     @Expose()

@@ -6,6 +6,7 @@ import { NextFunction, Request, Response } from 'express'
 @Injectable()
 export class DetectClientMiddleware implements NestMiddleware {
 	async use(req: Request, res: Response, next: NextFunction) {
+		console.log('🚀 ~ DetectClientMiddleware ~ use ~ req:', req)
 		// const ip = getClientIp(req)
 		// if (req.external) {
 		// 	throw new Error('Cannot replace property "external"')

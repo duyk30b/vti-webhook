@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  webhook-service:
+    container_name: webhook-service-production
+    image: 10.1.14.120:5000/snp_smartwms/source/be/webhook-service:${NODE_ENV:-develop}
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    networks:
+      mesx_network:
+        ipv4_address: ${CONTAINER_NETWORK_IP}
+    ports:
+      - ${APP_CONTAINER_PORT}:3000
+    restart: unless-stopped
+    command:
+      [
+        "sh",
+        "-c",
+        "npm run migration:run && npm run start:prod"
+      ]
+
+networks:
+  mesx_network:
+    name: ${MESX_NET_NAME}
+    external: true
+
+volumes:
+  db_data: {}

@@ -117,7 +117,7 @@ async function bootstrap() {
 	}
 
 	await app.listen(3000, () => {
-		logger.debug(`🚀 ===== [API] Server document: http://${APP_HOST}:${APP_CONTAINER_PORT}/api/v1/webhook/swagger-docs =====`)
+		logger.debug(`🚀 ===== [API] Server document: http://${APP_HOST}:${APP_CONTAINER_PORT}${API_PATH}/swagger-docs =====`)
 		logger.debug(`🚀 ===== [SQL] Database: jdbc:postgresql://${DATABASE_POSTGRES_HOST}:${DATABASE_POSTGRES_PORT}/${DATABASE_NAME} =====`)
 	})
 	await app.startAllMicroservices()

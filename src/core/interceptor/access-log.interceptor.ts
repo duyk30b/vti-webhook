@@ -26,7 +26,7 @@ export class AccessLogInterceptor implements NestInterceptor {
 			const request: Request = ctx.getRequest()
 
 			const { url, method, body } = request
-			if (url?.includes('webhook/health')) return next.handle()
+			if (url?.includes('webhooks/health')) return next.handle()
 
 			msgRequest = `${method} | ${url} | ${className} | ${funcName}() `
 			if (showData) {

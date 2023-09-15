@@ -65,11 +65,11 @@ deploy_develop:
       pwd;
       docker pull ${IMAGE_NAME}:${CI_COMMIT_REF_SLUG};
       docker create --name ${SERVICE_NAME}_temp ${IMAGE_NAME}:${CI_COMMIT_REF_SLUG};
-      docker cp ${SERVICE_NAME}_temp:./docker-compose.production.yml ./;
+      docker cp ${SERVICE_NAME}_temp:./docker-compose.yml ./;
       ls -la;
       docker rm -f ${SERVICE_NAME}_temp;
-      docker-compose -f docker-compose.production.yml down;
-      docker-compose -f docker-compose.production.yml up -d;
+      docker-compose -f docker-compose.yml down;
+      docker-compose -f docker-compose.yml up -d;
       docker image prune -f;"
 
 build_staging:
@@ -108,11 +108,12 @@ deploy_staging:
       pwd;
       docker pull ${IMAGE_NAME}:${CI_COMMIT_REF_SLUG};
       docker create --name ${SERVICE_NAME}_temp ${IMAGE_NAME}:${CI_COMMIT_REF_SLUG};
-      docker cp ${SERVICE_NAME}_temp:./docker-compose.production.yml ./;
+      docker cp ${SERVICE_NAME}_temp:./docker-compose.yml ./;
       ls -la;
       docker rm -f ${SERVICE_NAME}_temp;
-      docker-compose -f docker-compose.production.yml down;
-      docker-compose -f docker-compose.production.yml up -d;
+      docker-compose -f docker-compose.yml down;
+      docker-compose -f docker-compose.yml up -d;
+      docker-compose -f docker-compose.yml ps -a;
       docker image prune -f;"
 
 build_demo:
@@ -122,9 +123,6 @@ build_demo:
     - ls -la
     - chmod +x ./setup_env_demo.sh
     - ./setup_env_demo.sh
-    - echo "$PRIVATE_REGISTRY_HOST/$PRIVATE_REGISTRY_USERNAME/$PRIVATE_REGISTRY_PASSWD"
-    - echo "$SSH_USER/$SSH_SERVER_IP"
-    - echo "$SSH_PRIVATE_KEY"
   stage: build_demo
   script:
     - docker pull $IMAGE_NAME:latest || true
@@ -159,10 +157,10 @@ deploy_demo:
       cd ${PATH_TO_DEMO_PROJECT};
       docker pull ${IMAGE_NAME}:${CI_COMMIT_REF_SLUG};
       docker-compose down;
-      docker-compose -f docker-compose.production.yml up -d;
+      docker-compose -f docker-compose.yml up -d;
       docker image prune -f;"
 
 clean:
   stage: clean
   script:
-    - echo "docker system prune --all -f"
+    - docker system prune --all -f

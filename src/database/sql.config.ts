@@ -11,5 +11,5 @@ export const SqlConfig = registerAs('sql_config', (): TypeOrmModuleOptions => ({
 	autoLoadEntities: true,
 	synchronize: false,
 	extra: { max: parseInt(process.env.POSTGRES_MAX_POOL) || 20 },
-	logging: process.env.NODE_ENV !== 'production' ? 'all' : ['error'],
+	logging: ['production', 'staging'].includes(process.env.NODE_ENV) ? ['error'] : 'all',
 }))

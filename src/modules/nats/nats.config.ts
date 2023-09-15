@@ -16,6 +16,7 @@ export const NatsSubject = {
 	WEBHOOK_REGISTER_EVENT: NatsService.WEBHOOK + '.register_event',
 	WEBHOOK_PING: NatsService.WEBHOOK + '.ping',
 	AUTH_PING: NatsService.AUTH + '.ping',
+	AUTH_VALIDATE_TOKEN: NatsService.AUTH + '.validate_token',
 }
 
 export const NATS_REQUEST = process.env.NATS_REQUEST_SERVICE || 'request_service'
