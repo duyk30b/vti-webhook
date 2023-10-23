@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { FilterQuery, Model } from 'mongoose'
 import { NoExtraProperties } from 'src/common/helpers/typescript.helper'
-import { EventHistoryCondition } from './event-history.dto'
+import { EventHistoryCondition, EventHistoryOrder } from './event-history.dto'
 import { EventHistory, EventHistoryType } from './event-history.schema'
 
 @Injectable()
@@ -19,6 +19,25 @@ export class EventHistoryRepository {
 		if (condition.codes != null) filter.code = { $in: condition.codes }
 
 		return filter
+	}
+
+	async pagination(options: {
+		page: number,
+		limit: number,
+		order?: EventHistoryOrder,
+		condition?: EventHistoryCondition
+	}) {
+		const { limit, page, condition, order } = options
+		const filter = this.getFilterOptions(condition)
+
+		const query = this.eventHistoryModel.find(filter).skip((page - 1) * limit).limit(limit)
+		const [docs, count] = await Promise.all([
+			query.exec(),
+			this.eventHistoryModel.countDocuments(filter),
+		])
+
+		const data: EventHistoryType[] = docs.map((i) => i.toObject())
+		return { page, limit, data, count }
 	}
 
 	async findOneBy(condition: EventHistoryCondition): Promise<EventHistoryType> {

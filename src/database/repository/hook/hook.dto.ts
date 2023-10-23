@@ -1,11 +1,11 @@
-export class HookCondition {
-    id?: number
-    eventId?: number
+// export class HookCondition {
+//     id?: number
+//     eventId?: number
 
-    ids?: number[]
-    eventIds?: number[]
-}
+//     ids?: number[]
+//     eventIds?: number[]
+// }
 
-export type HookOrder = {
-    [P in 'id']?: 'ASC' | 'DESC'
-}
+// export type HookOrder = {
+//     [P in 'id']?: 'ASC' | 'DESC'
+// }

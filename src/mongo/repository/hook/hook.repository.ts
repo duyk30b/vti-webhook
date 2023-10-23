@@ -29,15 +29,18 @@ export class HookRepository {
 		relation?: { event: boolean }
 	}) {
 		const { limit, page, condition, order, relation } = options
-		let query = this.hookModel.find(condition).skip((page - 1) * limit).limit(limit)
+		const filter = this.getFilterOptions(condition)
+
+		let query = this.hookModel.find(filter).skip((page - 1) * limit).limit(limit)
 		if (relation?.event) {
 			query = query.populate(['event']) as any
 		}
 
 		const [docs, count] = await Promise.all([
 			query.exec(),
-			this.hookModel.countDocuments(condition),
+			this.hookModel.countDocuments(filter),
 		])
+
 		const data: HookType[] = docs.map((i) => i.toObject())
 		return { page, limit, data, count }
 	}
@@ -49,29 +52,49 @@ export class HookRepository {
 		if (relation?.event) {
 			query = query.populate(['event']) as any
 		}
+
 		const doc = await query
 		return doc ? doc.toObject() : null
 	}
 
-	async findMany(condition: any): Promise<HookType[]> {
-		const docs = await this.hookModel.find(condition).exec()
+	async findMany(condition: HookCondition): Promise<HookType[]> {
+		const filter = this.getFilterOptions(condition)
+
+		const docs = await this.hookModel.find(filter).exec()
 		return docs.map((i) => i.toObject())
 	}
 
 	async insertOne<T extends Partial<HookType>>(data: NoExtraProperties<Partial<HookType>, T>): Promise<HookType> {
 		data._event_id = new Types.ObjectId(data.eventId)
 		const model = new this.hookModel(data)
-		const inventorySnap = await model.save()
-		return inventorySnap.toObject()
+		const doc = await model.save()
+		return doc.toObject()
 	}
 
 	async insertMany<T extends Partial<HookType>>(data: NoExtraProperties<Partial<HookType>, T>[]): Promise<HookType[]> {
-		const hydratedDocument = await this.hookModel.insertMany(data)
-		return hydratedDocument.map((i: any) => i.toObject())
+		const docs = await this.hookModel.insertMany(data)
+		return docs.map((i: any) => i.toObject())
+	}
+
+	async updateOne<T extends Partial<HookType>>(
+		condition: HookCondition,
+		data: NoExtraProperties<Partial<HookType>, T>
+	): Promise<HookType> {
+		const filter = this.getFilterOptions(condition)
+		const doc = await this.hookModel.findOneAndUpdate(filter, data, { new: true })
+		return doc ? doc.toObject() : null
+	}
+
+	async deleteOne(condition: HookCondition): Promise<number> {
+		const filter = this.getFilterOptions(condition)
+
+		const result = await this.hookModel.deleteOne(filter)
+		return result.deletedCount
 	}
 
 	async deleteMany(condition: HookCondition): Promise<any> {
 		const filter = this.getFilterOptions(condition)
+
 		return await this.hookModel.deleteMany(filter)
 	}
 }

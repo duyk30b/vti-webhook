@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { HookCreateBody, HookPaginationQuery, HookUpdateBody } from './request'
 import { HookRepository } from 'src/mongo/repository/hook/hook.repository'
+import { BusinessException } from 'src/core/exception-filters/business-exception.filter'
 
 @Injectable()
 export class ApiHookService {
@@ -25,14 +26,18 @@ export class ApiHookService {
 	}
 
 	async updateOne(id: string, body: HookUpdateBody) {
-		// const { affected } = await this.hookRepository.update({ id }, body)
-		// if (affected !== 1) throw new Error('UpdateFailed')
-		// return await this.hookRepository.findOne({ id }, { event: true })
+		const hook = await this.hookRepository.updateOne({ id }, body)
+		if (!hook) {
+			throw new BusinessException('error.Hook.NotFound')
+		}
+		return hook
 	}
 
-	async delete(id: string) {
-		// const response = await this.hookRepository.delete({ id })
-		// if (response.affected == 0) throw new Error('DeleteFailed')
-		// return response
+	async deleteOne(id: string) {
+		const deletedCount = await this.hookRepository.deleteOne({ id })
+		if (deletedCount !== 1) {
+			throw new BusinessException('error.Hook.NotFound')
+		}
+		return { deleted: deletedCount, id }
 	}
 }

@@ -32,6 +32,6 @@ export class ApiHookController {
 
 	@Delete('delete/:id')
 	async delete(@Param() { id }: IdMongoParam) {
-		return await this.apiHookService.delete(id)
+		return await this.apiHookService.deleteOne(id)
 	}
 }

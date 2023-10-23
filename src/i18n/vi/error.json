@@ -1,5 +1,8 @@
 {
 	"Event": {
 		"NotFound": "Không tìm thấy Event"
+	},
+	"Hook": {
+		"NotFound": "Không tìm thấy Hook"
 	}
 }

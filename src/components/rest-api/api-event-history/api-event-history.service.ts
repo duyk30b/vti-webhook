@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { EventHistoryRepository } from 'src/database/repository/event-history/event-history.repository'
+import { EventHistoryRepository } from 'src/mongo/repository/event-history/event-history.repository'
 import { EventHistoryPaginationQuery } from './request/event-history-pagination.query'
 
 @Injectable()

@@ -9,6 +9,9 @@ export type I18nTranslations = {
         "Event": {
             "NotFound": string;
         };
+        "Hook": {
+            "NotFound": string;
+        };
     };
 };
 export type I18nPath = Path<I18nTranslations>;

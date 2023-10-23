@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { BusinessException } from 'src/core/exception-filters/business-exception.filter'
-import { ProtocolType } from 'src/database/common/enum'
-import { EventHistoryEntity } from 'src/database/entities/event-history.entity'
-import { HookEntity } from 'src/database/entities/hook.entity'
-import { EventHistoryRepository } from 'src/database/repository/event-history/event-history.repository'
-import { EventRepository } from 'src/database/repository/event/event.repository'
-import { HookRepository } from 'src/database/repository/hook/hook.repository'
 import { AxiosService } from 'src/modules/axios/axios.service'
+import { ProtocolType } from 'src/mongo/common/enum'
+import { EventHistoryRepository } from 'src/mongo/repository/event-history/event-history.repository'
+import { EventHistoryType } from 'src/mongo/repository/event-history/event-history.schema'
+import { EventRepository } from 'src/mongo/repository/event/event.repository'
+import { HookRepository } from 'src/mongo/repository/hook/hook.repository'
+import { HookType } from 'src/mongo/repository/hook/hook.schema'
 import { ProcessEventRequest } from './request/process-event.request'
 
 @Injectable()
@@ -28,7 +28,7 @@ export class KafkaServerService {
 		// for REST API
 		const restPromise = hooks
 			.filter((i) => i.protocolType === ProtocolType.RestAPI)
-			.map((i: HookEntity) => this.axiosService.post({
+			.map((i: HookType) => this.axiosService.post({
 				url: i.url,
 				data,
 				config: { headers: i.header },
@@ -37,9 +37,9 @@ export class KafkaServerService {
 		if (!restPromise.length) return
 		const restResult = await Promise.allSettled(restPromise)
 
-		const snapEventHistories: EventHistoryEntity[] = []
+		const snapEventHistories: EventHistoryType[] = []
 		restResult.forEach((item, index) => {
-			const history = new EventHistoryEntity()
+			const history: EventHistoryType = {} as any
 			history.code = event.code
 			history.name = event.name
 			history.protocolType = hooks[index].protocolType
