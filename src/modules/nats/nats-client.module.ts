@@ -1,28 +1,24 @@
 import { Global, Module } from '@nestjs/common'
-import { ConfigModule, ConfigType } from '@nestjs/config'
-import { ClientProxyFactory, Transport } from '@nestjs/microservices'
+import { ClientProxyFactory } from '@nestjs/microservices'
 import { NatsClientService } from './nats-client.service'
 import { NatsConfig } from './nats.config'
+import { NatsClientAuthService } from './service/nats-client-auth.service'
 
 @Global()
 @Module({
-	imports: [ConfigModule.forFeature(NatsConfig)],
 	providers: [
 		{
 			provide: 'NATS_CLIENT_SERVICE',
-			inject: [NatsConfig.KEY],
-			useFactory: (natsConfig: ConfigType<typeof NatsConfig>) => {
-				return ClientProxyFactory.create({
-					transport: Transport.NATS,
-					options: {
-						servers: natsConfig.servers,
-						headers: { 'x-version': '1.0.0' },
-					},
-				})
+			useFactory: () => {
+				return ClientProxyFactory.create(NatsConfig)
 			},
 		},
 		NatsClientService,
+		NatsClientAuthService,
 	],
-	exports: [NatsClientService],
+	exports: [
+		NatsClientService,
+		NatsClientAuthService,
+	],
 })
 export class NatsClientModule { }

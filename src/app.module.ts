@@ -14,8 +14,10 @@ import { NatsServerModule } from './components/nats-server/nats-server.module'
 import { RestApiModule } from './components/rest-api/rest-api.module'
 import { SqlModule } from './database/sql.module'
 import { AxiosModule } from './modules/axios/axios.module'
+import { KafkaClientModule } from './modules/kafka/kafka-client.module'
 import { KongGatewayModule } from './modules/kong-gateway/kong-gateway.module'
 import { NatsClientModule } from './modules/nats/nats-client.module'
+import { MongoDbConnectModule } from './mongo/mongodb-connect.module'
 
 @Module({
 	imports: [
@@ -40,12 +42,15 @@ import { NatsClientModule } from './modules/nats/nats-client.module'
 		ConsulModule.forRootAsync({ inject: [BOOT] }),
 		ServiceModule.forRootAsync({ inject: [BOOT, CONSUL] }),
 		KongGatewayModule.forRootAsync(),
+
 		SqlModule,
+		MongoDbConnectModule,
 		NatsClientModule,
 		AxiosModule,
 		RestApiModule,
 		NatsServerModule,
-		KafkaServerModule,
+		// KafkaClientModule,
+		// KafkaServerModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

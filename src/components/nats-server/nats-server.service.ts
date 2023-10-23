@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
+import { EventEntity } from 'src/database/entities/event.entity'
 import { EventRepository } from 'src/database/repository/event/event.repository'
 import { HookRepository } from 'src/database/repository/hook/hook.repository'
 import { EventBody, EventRegisterBody } from './request'
-import { EventEntity } from 'src/database/entities/event.entity'
 
 @Injectable()
 export class NatsServerService {
@@ -10,6 +10,16 @@ export class NatsServerService {
 		private readonly hookRepository: HookRepository,
 		private readonly eventRepository: EventRepository
 	) { }
+
+	async pong(data: any) {
+		return {
+			meta: data,
+			data: {
+				message: 'webhook-service: pong',
+				time: Date.now(),
+			},
+		}
+	}
 
 	async registerEvent({ data }: EventRegisterBody) {
 		const codes = data.map((i) => i.code)

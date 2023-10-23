@@ -1,11 +1,8 @@
 import { ClassSerializerInterceptor, Logger, ValidationError, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory, Reflector } from '@nestjs/core'
-import { KafkaOptions, NatsOptions, Transport } from '@nestjs/microservices'
+import { KafkaOptions, NatsOptions } from '@nestjs/microservices'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import * as fs from 'fs'
-import { Partitioners } from 'kafkajs'
-import * as path from 'path'
 import { AppModule } from './app.module'
 import { BusinessExceptionFilter } from './core/exception-filters/business-exception.filter'
 import { UnknownExceptionFilter } from './core/exception-filters/unknown-exception.filter'
@@ -13,7 +10,7 @@ import { ValidationException, ValidationExceptionFilter } from './core/exception
 import { AccessLogInterceptor } from './core/interceptor/access-log.interceptor'
 import { TransformResponseInterceptor } from './core/interceptor/transform-response.interceptor'
 import { KafkaConfig } from './modules/kafka/kafka.config'
-import { NATS_SERVERS, NatsService } from './modules/nats/nats.config'
+import { NatsConfig } from './modules/nats/nats.config'
 
 async function bootstrap() {
 	const logger = new Logger('bootstrap')
@@ -48,43 +45,8 @@ async function bootstrap() {
 		exceptionFactory: (errors: ValidationError[] = []) => new ValidationException(errors),
 	}))
 
-	app.connectMicroservice<NatsOptions>(
-		{
-			transport: Transport.NATS,
-			options: {
-				servers: NATS_SERVERS,
-				queue: NatsService.WEBHOOK,
-			},
-		},
-		{ inheritAppConfig: true }
-	)
-
-	app.connectMicroservice<KafkaOptions>(
-		{
-			transport: Transport.KAFKA,
-			options: {
-				client: {
-					clientId: KafkaConfig().GROUP_ID + '-client',
-					brokers: KafkaConfig().BROKERS,
-					ssl: {
-						rejectUnauthorized: false,
-						ca: [fs.readFileSync(path.join(__dirname, './cert/kafka.crt'), 'utf-8')],
-						key: fs.readFileSync(path.join(__dirname, './cert/kafka.key'), 'utf-8'),
-						cert: fs.readFileSync(path.join(__dirname, './cert/kafka.pem'), 'utf-8'),
-					},
-				},
-				consumer: {
-					groupId: KafkaConfig().GROUP_ID,
-					allowAutoTopicCreation: true,
-				},
-				producer: {
-					allowAutoTopicCreation: true,
-					createPartitioner: Partitioners.LegacyPartitioner,
-				},
-			},
-		},
-		{ inheritAppConfig: true }
-	)
+	app.connectMicroservice<NatsOptions>(NatsConfig, { inheritAppConfig: true })
+	// app.connectMicroservice<KafkaOptions>(KafkaConfig, { inheritAppConfig: true })
 
 	const configService = app.get(ConfigService)
 	const NODE_ENV = configService.get<string>('NODE_ENV') || 'local'

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { IdParam } from 'src/common/swagger/id-param.swagger'
+import { IdMongoParam, IdParam } from 'src/common/swagger/id-param.swagger'
 import { ApiEventService } from './api-event.service'
 import { EventCreateBody, EventUpdateBody } from './request'
 import { EventPaginationQuery } from './request/event-pagination.query'
@@ -21,7 +21,7 @@ export class ApiEventController {
 	}
 
 	@Get('detail/:id')
-	async detail(@Param() { id }: IdParam) {
+	async detail(@Param() { id }: IdMongoParam) {
 		return await this.apiEventService.getOne(id)
 	}
 
@@ -31,7 +31,7 @@ export class ApiEventController {
 	}
 
 	@Patch('update/:id')
-	async update(@Param() { id }: IdParam, @Body() body: EventUpdateBody) {
-		return await this.apiEventService.updateOne(+id, body)
+	async update(@Param() { id }: IdMongoParam, @Body() body: EventUpdateBody) {
+		return await this.apiEventService.updateOne(id, body)
 	}
 }

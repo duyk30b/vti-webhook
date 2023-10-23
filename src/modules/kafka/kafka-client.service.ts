@@ -2,16 +2,18 @@ import { Inject, Injectable, Logger } from '@nestjs/common'
 import { ClientKafka } from '@nestjs/microservices'
 import { lastValueFrom } from 'rxjs'
 import { KafkaTopic } from './kafka.config'
+import { Producer } from 'kafkajs'
 
 @Injectable()
 export class KafkaClientService {
 	private readonly logger = new Logger(KafkaClientService.name)
+	private kafkaProducer: Producer
 
-	constructor(@Inject('KAFKA_SERVICE') private kafkaClient: ClientKafka) { }
+	constructor(@Inject('KAFKA_CLIENT_SERVICE') private kafkaClient: ClientKafka) { }
 
 	async onModuleInit() {
 		try {
-			await this.kafkaClient.connect()
+			this.kafkaProducer = await this.kafkaClient.connect()
 		} catch (error) {
 			this.logger.error(error)
 		}

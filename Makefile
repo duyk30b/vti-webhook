@@ -11,8 +11,5 @@ logs:
 down:
 	docker compose -f docker-compose.local.yml down
 
-up-clean:
-	docker compose -f docker-compose.local.yml down
-	docker system prune -a -f
-	docker compose -f docker-compose.local.yml up -d
-	docker compose -f docker-compose.local.yml logs -f
+prune:
+	docker system prune -a --volumes -f

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { IdParam } from 'src/common/swagger/id-param.swagger'
+import { IdMongoParam } from 'src/common/swagger/id-param.swagger'
 import { ApiHookService } from './api-hook.service'
 import { HookCreateBody, HookUpdateBody } from './request'
 import { HookPaginationQuery } from './request/hook-pagination.query'
@@ -16,7 +16,7 @@ export class ApiHookController {
 	}
 
 	@Get('details/:id')
-	async details(@Param() { id }: IdParam) {
+	async details(@Param() { id }: IdMongoParam) {
 		return await this.apiHookService.getOne(id)
 	}
 
@@ -26,12 +26,12 @@ export class ApiHookController {
 	}
 
 	@Patch('update/:id')
-	async update(@Param() { id }: IdParam, @Body() body: HookUpdateBody) {
-		return await this.apiHookService.updateOne(+id, body)
+	async update(@Param() { id }: IdMongoParam, @Body() body: HookUpdateBody) {
+		return await this.apiHookService.updateOne(id, body)
 	}
 
 	@Delete('delete/:id')
-	async delete(@Param() { id }: IdParam) {
-		return await this.apiHookService.delete(+id)
+	async delete(@Param() { id }: IdMongoParam) {
+		return await this.apiHookService.delete(id)
 	}
 }

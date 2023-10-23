@@ -13,7 +13,7 @@ services:
         ipv4_address: ${CONTAINER_NETWORK_IP}
     volumes:
       - .:/app
-      - /app/node_modules
+      - webhook_node_modules:/app/node_modules
     restart: unless-stopped
     command: npm run start:debug
     ports:
@@ -32,4 +32,4 @@ networks:
     external: true
 
 volumes:
-  db_data: {}
+  webhook_node_modules:
