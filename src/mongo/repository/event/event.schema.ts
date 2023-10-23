@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { BaseSchema } from '../../base.schema'
 import { Document } from 'mongoose'
-import { Hook } from '../hook/hook.schema'
+import { BaseSchema } from '../../base.schema'
 
 @Schema({ collection: 'events', timestamps: false })
 export class Event extends BaseSchema {

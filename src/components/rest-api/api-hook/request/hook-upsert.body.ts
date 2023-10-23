@@ -1,9 +1,8 @@
 import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger'
-import { Expose, Transform, Type } from 'class-transformer'
+import { Expose } from 'class-transformer'
 import { IsDefined, IsEnum, IsMongoId, IsObject, IsUrl } from 'class-validator'
-import { Types } from 'mongoose'
 import { valuesEnum } from 'src/common/helpers/typescript.helper'
-import { ProtocolType } from 'src/database/common/enum'
+import { ProtocolType } from 'src/mongo/common/enum'
 
 export class HookCreateBody {
 	@ApiProperty({ example: '6532515ed68320d3e998f4ed' })

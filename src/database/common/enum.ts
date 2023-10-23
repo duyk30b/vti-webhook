@@ -1,3 +1,3 @@
-export enum ProtocolType {
-    RestAPI = 'RestAPI',
-}
+// export enum ProtocolType {
+//     RestAPI = 'RestAPI',
+// }

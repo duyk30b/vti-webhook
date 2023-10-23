@@ -16,12 +16,7 @@ services:
     ports:
       - ${APP_CONTAINER_PORT}:3000
     restart: unless-stopped
-    command:
-      [
-        "sh",
-        "-c",
-        "npm run migration:run && npm run start:prod"
-      ]
+    command: [ "sh", "-c", "npm run start:prod" ]
 
 networks:
   mesx_network:

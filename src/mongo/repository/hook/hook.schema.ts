@@ -1,12 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document, Types } from 'mongoose'
-import { ProtocolType } from 'src/database/common/enum'
+import { ProtocolType } from 'src/mongo/common/enum'
 import { BaseSchema } from '../../base.schema'
-import { Event, EventType } from '../event/event.schema'
+import { EventType } from '../event/event.schema'
 
 @Schema({ collection: 'hooks', timestamps: false })
 export class Hook extends BaseSchema {
-	@Prop({ type: Types.ObjectId, required: true, ref: Event.name })
+	@Prop({ type: Types.ObjectId, required: true })
 	_event_id: Types.ObjectId
 
 	@Prop()

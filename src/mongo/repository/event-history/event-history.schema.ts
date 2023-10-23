@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { BaseSchema } from '../../base.schema'
 import mongoose, { Document } from 'mongoose'
-import { ProtocolType } from 'src/database/common/enum'
+import { ProtocolType } from 'src/mongo/common/enum'
+import { BaseSchema } from '../../base.schema'
 
 @Schema({ collection: 'eventHistories', timestamps: false })
 export class EventHistory extends BaseSchema {
