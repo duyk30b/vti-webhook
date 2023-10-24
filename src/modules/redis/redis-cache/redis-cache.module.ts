@@ -19,12 +19,12 @@ import { RedisCacheService } from './redis-cache.service'
 						host: redisConfig.host,
 						port: redisConfig.port,
 					},
+					ttl: 60 * 60 * 24 * 7, // seconds
 				})
 				return {
 					isGlobal: true,
 					max: 10_000,
 					store: store as unknown as CacheStore,
-					ttl: 1000 * 60 * 60 * 24 * 7, // 1 week
 				}
 			},
 		}),

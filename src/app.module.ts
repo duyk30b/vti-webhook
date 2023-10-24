@@ -43,7 +43,7 @@ import { MongoDbConnectModule } from './mongo/mongodb-connect.module'
 		ServiceModule.forRootAsync({ inject: [BOOT, CONSUL] }),
 		KongGatewayModule.forRootAsync(),
 
-		SqlModule,
+		// SqlModule,
 		MongoDbConnectModule,
 		RedisCacheModule,
 		BullQueueModule,
