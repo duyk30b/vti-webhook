@@ -1,3 +1,8 @@
 export enum ProtocolType {
-    RestAPI = 'RestAPI',
+	RestAPI = 'RestAPI',
+}
+
+export enum AuthenticationMethod {
+	Password = 'Password',
+	Token = 'Token'
 }
