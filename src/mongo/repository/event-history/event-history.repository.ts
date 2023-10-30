@@ -46,8 +46,9 @@ export class EventHistoryRepository {
 		return doc ? doc.toObject() : null
 	}
 
-	async findManyBy(condition: any): Promise<EventHistoryType[]> {
-		const docs = await this.eventHistoryModel.find(condition).exec()
+	async findManyBy(condition: EventHistoryCondition): Promise<EventHistoryType[]> {
+		const filter = this.getFilterOptions(condition)
+		const docs = await this.eventHistoryModel.find(filter).exec()
 		return docs.map((i) => i.toObject())
 	}
 

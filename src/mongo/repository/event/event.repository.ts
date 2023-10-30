@@ -46,8 +46,9 @@ export class EventRepository {
 		return doc ? doc.toObject() : null
 	}
 
-	async findMany(condition: any): Promise<EventType[]> {
-		const docs = await this.eventModel.find(condition).exec()
+	async findMany(condition: EventCondition): Promise<EventType[]> {
+		const filter = this.getFilterOptions(condition)
+		const docs = await this.eventModel.find(filter).exec()
 		return docs.map((i) => i.toObject())
 	}
 
